@@ -19,13 +19,14 @@ WHERE codeSalarie='S2';
 
 --------------------------------------------------------------------
 
-CREATE OR REPLACE PROCEDURE AjouterSalarieEquipe (p_codeSalarie IN EtreAffecte.codeSalarie%TYPE, p_codeEquipe IN EtreAffecte.codeEquipe%TYPE) IS
-mycount INT;
+CREATE OR REPLACE PROCEDURE AjouterSalarieEquipe (p_codeSalarie EtreAffecte.codeSalarie%TYPE, p_codeEquipe EtreAffecte.codeEquipe%TYPE) IS
+    mycount NUMBER;
 BEGIN
-    SELECT COUNT(codeEquipe) FROM EtreAffecte WHERE codeSalarie=p_codeSalarie INTO mycount;
-    IF mycount<3
-    THEN
-        INSERT INTO EQUIPE VALUES (p_codeSalarie, p_Equipe);
+    SELECT COUNT(codeEquipe)  INTO mycount FROM EtreAffecte
+    WHERE codeSalarie=p_codeSalarie;
+    IF mycount <3 THEN
+        INSERT INTO EtreAffecte (codeSalarie, codeEquipe) VALUES (p_codeSalarie, p_codeEquipe);
     ELSE
         RAISE_APPLICATION_ERROR(-20001, 'Le Salarié est déjà affecté à 3 équipes, il faudrais qu il se repose un peu non ?');
+    END IF;
 END;
